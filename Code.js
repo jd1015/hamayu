@@ -10,6 +10,8 @@ var MAX_THREADS = 5;
  * @returns {Card[]}
  */
 function buildAddOn(e) {
+  console.log('buildAddOn start');
+  console.log(e);
   // Activate temporary Gmail add-on scopes.
   var accessToken = e.messageMetadata.accessToken;
   GmailApp.setCurrentMessageAccessToken(accessToken);
@@ -30,6 +32,8 @@ function buildAddOn(e) {
       .setHeader(CardService.newCardHeader()
         .setTitle('No recent threads from this sender')).build());
   }
+  console.log(cards);
+  console.log('buildAddOn end');
   return cards;
 }
 
@@ -41,6 +45,8 @@ function buildAddOn(e) {
  *  @return {Object} a collection of sender information to display in cards.
  */
 function extractSenderData(messageId) {
+  console.log('extractSenderData start');
+  console.log(messageId);
   // Use the Gmail service to access information about this message.
   var mail = GmailApp.getMessageById(messageId);
   var threadId = mail.getThread().getId();
@@ -66,6 +72,8 @@ function extractSenderData(messageId) {
     'recents': recents
   };
 
+  console.log(senderData);
+  console.log('extractSenderData end');
   return senderData;
 }
 
@@ -78,12 +86,16 @@ function extractSenderData(messageId) {
  *  @return {String} Only the email address.
  */
 function extractEmailAddress(sender) {
+  console.log('extractEmailAddress start');
+  console.log(sender);
   var regex = /\<([^\@]+\@[^\>]+)\>/;
   var email = sender;  // Default to using the whole string.
   var match = regex.exec(sender);
   if (match) {
     email = match[1];
   }
+  console.log(email);
+  console.log('extractEmailAddress end');
   return email;
 }
 
@@ -95,6 +107,9 @@ function extractEmailAddress(sender) {
  *  @return {Card} a card that displays thread information.
  */
 function buildRecentThreadCard(senderEmail, threadData) {
+  console.log('buildRecentThreadCard start');
+  console.log(senderEmail);
+  console.log(threadData);
   var card = CardService.newCardBuilder();
   card.setHeader(CardService.newCardHeader().setTitle(threadData.subject));
   var section = CardService.newCardSection()
@@ -119,5 +134,6 @@ function buildRecentThreadCard(senderEmail, threadData) {
   section.addWidget(CardService.newButtonSet().addButton(button));
 
   card.addSection(section);
+  console.log('buildRecentThreadCard end');
   return card.build();
 }
